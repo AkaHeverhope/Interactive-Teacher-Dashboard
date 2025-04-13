@@ -2,11 +2,16 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import time
 import seaborn as sns
-import plotly
+import io
+import base64
+from PIL import Image
+import time
+import random
 import altair as alt
 from streamlit_option_menu import option_menu
+import plotly.express as px
+import plotly.graph_objects as go
 
 
 # Set page config
