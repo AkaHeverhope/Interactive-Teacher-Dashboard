@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from PIL import Image
 import altair as alt
 from streamlit_option_menu import option_menu
 
