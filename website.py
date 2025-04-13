@@ -1013,7 +1013,7 @@ if not low_performers.empty:
         name = f"{student.get('first_name', 'Student')} {student.get('last_name', '')}"
         alerts.append({
             "priority": "high",
-            "message": f"{name} has a failing average ({student['average_grade']:.1f}%)",
+            "message": f"{Name} has a failing average ({student['average_grade']:.1f}%)",
             "action": "Contact parents"
         })
 
