@@ -1005,7 +1005,29 @@ elif selected == "Students":
                         <div style="background-color: #3B82F6; color: white; width: 60px; height: 60px; 
                                   border-radius: 50%; display: flex; align-items: center; justify-content: center; 
                                   font-weight: bold; font-size: 24px; margin-right: 15px;">
-                            {selected_student['Name'].split()[0][0]}{selected_student['Name'].split()[1][0]}
+                                  # Replace the alerts code (around line 761) with this:
+# Find students with low grades
+low_performers = df[df['average_grade'] < 65]
+if not low_performers.empty:
+    for _, student in low_performers.iterrows():
+        name = f"{student.get('first_name', 'Student')} {student.get('last_name', '')}"
+        alerts.append({
+            "priority": "high",
+            "message": f"{name} has a failing average ({student['average_grade']:.1f}%)",
+            "action": "Contact parents"
+        })
+
+# Find students with poor attendance
+poor_attendance = df[df['attendance_rate'] < 80]
+if not poor_attendance.empty:
+    for _, student in poor_attendance.iterrows():
+        name = f"{student.get('first_name', 'Student')} {student.get('last_name', '')}"
+        alerts.append({
+            "priority": "medium",
+            "message": f"{name} has low attendance ({student['attendance_rate']:.1f}%)",
+            "action": "Review absences"
+        })
+                            
                         </div>
                         <div>
                             <div style="font-weight: 600; color: #1E3A8A; font-size: 1.2rem;">{selected_student['Name']}</div>
