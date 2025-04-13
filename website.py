@@ -260,8 +260,8 @@ if 'students' not in st.session_state:
     # Initialize with sample data
     st.session_state['students'] = pd.DataFrame({
         'ID': [1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010],
-        'Name': ['John Smith', 'Emma Wilson', 'Michael Johnson', 'Sophia Lee', 'Oliver Brown', 
-                'Isabella Garcia', 'Liam Martinez', 'Charlotte Lewis', 'Noah Taylor', 'Amelia Wright'],
+        'Name': ['Saran', 'Selvi', 'Gokul', 'Tejash', 'Dhakshina', 
+                'Dharshan', 'Messi', 'Ronaldo', 'Neymar', 'Shivani'],
         'Grade': ['A', 'B+', 'C', 'A-', 'B', 'A+', 'B-', 'C+', 'A', 'B+'],
         'Score': [92, 87, 75, 90, 85, 96, 82, 78, 94, 88],
         'Attendance': [95, 88, 75, 92, 85, 98, 80, 82, 91, 86],
