@@ -409,7 +409,7 @@ def numeric_to_grade(score):
 # Function to generate random performance data
 def generate_random_data(n_students=30):
     names = [
-        ''Saran', 'Selvi', 'Gokul', 'Tejash', 'Dhakshina' ,'Dharshan', 'Messi', 'Ronaldo', 'Neymar', 'Shivani'',
+        'Saran', 'Selvi', 'Gokul', 'Tejash', 'Dhakshina' ,'Dharshan', 'Messi', 'Ronaldo', 'Neymar', 'Shivani',
         'Mia Lewis', 'Lucas Hall', 'Charlotte Young', 'Henry Allen', 'Amelia Scott',
         'Alexander Green', 'Harper King', 'Daniel Wright', 'Evelyn Baker', 'Matthew Hill',
         'Abigail Adams', 'Michael Campbell', 'Emily Nelson', 'Ethan Carter', 'Elizabeth Mitchell',
