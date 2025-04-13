@@ -14,6 +14,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
+
 # Set page config
 st.set_page_config(
     page_title="TeachGrade Pro",
@@ -260,8 +261,8 @@ if 'students' not in st.session_state:
     # Initialize with sample data
     st.session_state['students'] = pd.DataFrame({
         'ID': [1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010],
-        'Name': ['Saran', 'Selvi', 'Gokul', 'Tejash', 'Dhakshina', 
-                'Dharshan', 'Messi', 'Ronaldo', 'Neymar', 'Shivani'],
+        'Name': ['Saran', 'Gokul', 'Harshith', 'Selvi', 'Guhan', 
+                'Isabella ', 'Praketh', 'Charles', 'Hitler', 'Elil'],
         'Grade': ['A', 'B+', 'C', 'A-', 'B', 'A+', 'B-', 'C+', 'A', 'B+'],
         'Score': [92, 87, 75, 90, 85, 96, 82, 78, 94, 88],
         'Attendance': [95, 88, 75, 92, 85, 98, 80, 82, 91, 86],
@@ -355,7 +356,7 @@ if 'progress' not in st.session_state:
     st.session_state['progress'] = pd.DataFrame(data)
 
 if 'username' not in st.session_state:
-    st.session_state['username'] = 'Ms. Johnson'
+    st.session_state['username'] = 'Mr.Anand'
 
 if 'show_welcome' not in st.session_state:
     st.session_state['show_welcome'] = True
@@ -409,11 +410,12 @@ def numeric_to_grade(score):
 # Function to generate random performance data
 def generate_random_data(n_students=30):
     names = [
-        'Saran', 'Selvi', 'Gokul', 'Tejash', 'Dhakshina' ,'Dharshan', 'Messi', 'Ronaldo', 'Neymar', 'Shivani',
-        'Mia Lewis', 'Lucas Hall', 'Charlotte Young', 'Henry Allen', 'Amelia Scott',
-        'Alexander Green', 'Harper King', 'Daniel Wright', 'Evelyn Baker', 'Matthew Hill',
-        'Abigail Adams', 'Michael Campbell', 'Emily Nelson', 'Ethan Carter', 'Elizabeth Mitchell',
-        'Jacob Phillips', 'Sofia Turner', 'David Parker', 'Camila Evans', 'Joseph Collins'
+        'Saran', 'Selvi', 'Guhan', 'Senthil', 'Shivani',
+        'Sarvash', 'Nikash', 'Harshith', 'Suhil', 'Dhanajith',
+        'Nidhisha', 'Dharaneesh', 'Manigandan', 'Bhadhrinath', 'Anand',
+        'Prajith', 'Rhishava', 'Daniel ', 'Sherlock Holmes', 'T sharan',
+        'Monish', 'Rakshan', 'Roshan', 'Tejash', 'Dhakshina',
+        'Jacob', 'Sophia', 'David Beckham', 'Messi', 'Ronaldo'
     ]
     
     data = []
@@ -756,7 +758,7 @@ if selected == "Dashboard":
                     <div style="background-color: #3B82F6; color: white; width: 40px; height: 40px; 
                               border-radius: 50%; display: flex; align-items: center; justify-content: center; 
                               font-weight: bold; font-size: 16px; margin-right: 10px;">
-                        {student['Name'].split()[0][0]}{student['Name'].split()[1][0]}
+                        {student['names'].split()[0][0]}{student['names'].split()[1][0]}
                     </div>
                     <div>
                         <div style="font-weight: 500; color: #1E3A8A;">{student['Name']}</div>
@@ -1004,29 +1006,7 @@ elif selected == "Students":
                         <div style="background-color: #3B82F6; color: white; width: 60px; height: 60px; 
                                   border-radius: 50%; display: flex; align-items: center; justify-content: center; 
                                   font-weight: bold; font-size: 24px; margin-right: 15px;">
-                                  # Replace the alerts code (around line 761) with this:
-# Find students with low grades
-low_performers = df[df['average_grade'] < 65]
-if not low_performers.empty:
-    for _, student in low_performers.iterrows():
-        name = f"{student.get('first_name', 'Student')} {student.get('last_name', '')}"
-        alerts.append({
-            "priority": "high",
-            "message": f"{Name} has a failing average ({student['average_grade']:.1f}%)",
-            "action": "Contact parents"
-        })
-
-# Find students with poor attendance
-poor_attendance = df[df['attendance_rate'] < 80]
-if not poor_attendance.empty:
-    for _, student in poor_attendance.iterrows():
-        name = f"{student.get('first_name', 'Student')} {student.get('last_name', '')}"
-        alerts.append({
-            "priority": "medium",
-            "message": f"{name} has low attendance ({student['attendance_rate']:.1f}%)",
-            "action": "Review absences"
-        })
-                            
+                            {selected_student['names'].split()[0][0]}{selected_student['names'].split()[1][0]}
                         </div>
                         <div>
                             <div style="font-weight: 600; color: #1E3A8A; font-size: 1.2rem;">{selected_student['Name']}</div>
