@@ -1,15 +1,6 @@
 streamlit
 pandas
 numpy
-matplotlib.pyplot
 seaborn
-plotly.express
-plotly.graph_objects 
-datetime
-io
-base64
-PIL 
-time 
-random
 altair
 streamlit_option_menu
