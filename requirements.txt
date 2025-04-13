@@ -4,6 +4,5 @@ numpy
 seaborn
 altair
 streamlit_option_menu 
-random
 plotly.express
 plotly.graph_objects
