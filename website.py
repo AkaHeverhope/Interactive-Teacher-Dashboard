@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 import seaborn as sns
+import plotly
 import altair as alt
 from streamlit_option_menu import option_menu
 
