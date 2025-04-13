@@ -4,7 +4,6 @@ numpy
 seaborn
 altair
 streamlit_option_menu 
-PIL
 time
 random
 plotly.express
