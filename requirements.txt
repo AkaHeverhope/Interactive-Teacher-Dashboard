@@ -3,8 +3,7 @@ pandas
 numpy
 seaborn
 altair
-streamlit_option_menu
-matplotlib.pyplot 
+streamlit_option_menu 
 io
 base64
 PIL
