@@ -999,247 +999,256 @@ elif selected == "Students":
             
             col1, col2 = st.columns([1, 2])
             
-            with col1:
-                st.markdown(f"""
-                <div class="grade-card">
-                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                        <div style="background-color: #3B82F6; color: white; width: 60px; height: 60px; 
-                                  border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-                                  font-weight: bold; font-size: 24px; margin-right: 15px;">
-                            {selected_student['Name'].split()[0][0]}{selected_student['Name'].split()[1][0]}
-                        </div>
-                        <div>
-                            <div style="font-weight: 600; color: #1E3A8A; font-size: 1.2rem;">{selected_student['Name']}</div>
-                            <div style="color: #6B7280;">ID: {selected_student['ID']}</div>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-weight: 500; margin-bottom: 5px;">Overall Grade</div>
-                        <div style="display: flex; align-items: center;">
-                            <div style="background-color: #DBEAFE; color: #1E40AF; width: 40px; height: 40px; 
-                                      border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-                                      font-weight: bold; font-size: 18px; margin-right: 10px;">
-                                {selected_student['Grade'][0]}
-                            </div>
-                            <div style="font-size: 1.2rem; font-weight: 600; color: #1E40AF;">{selected_student['Grade']} ({selected_student['Score']}%)</div>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-weight: 500; margin-bottom: 5px;">Attendance</div>
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: {selected_student['Attendance']}%;"></div>
-                        </div>
-                        <div style="text-align: right; font-size: 0.9rem;">{selected_student['Attendance']}%</div>
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-weight: 500; margin-bottom: 5px;">Behavior</div>
-                        <div style="padding: 8px; background-color: #F3F4F6; border-radius: 8px; text-align: center;">
-                            {selected_student['Behavior']}
-                        </div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                st.markdown(f"""
-                <div class="grade-card">
-                    <h4 style="margin-top: 0;">Teacher Comments</h4>
-                    <p style="font-style: italic;">"{selected_student['Comments']}"</p>
-                    <div style="font-size: 0.8rem; color: #6B7280; text-align: right;">
-                        Last updated: {selected_student['Last Updated'].strftime('%b %d, %Y')}
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            with col2:
-                tab1, tab2, tab3 = st.tabs(["Academic Performance", "Assignments", "Attendance"])
-                
-                with tab1:
-                    # Subject performance chart
-                    fig = px.bar(
-                        student_subjects,
-                        x='Subject',
-                        y='Score',
-                        color='Subject',
-                        title=f"Subject Performance for {selected_student['Name']}",
-                        text='Grade',
-                        height=300
-                    )
-                    fig.update_layout(
-                        xaxis_title="Subject",
-                        yaxis_title="Score (%)",
-                        yaxis=dict(range=[0, 100]),
-                        showlegend=False
-                    )
-                    fig.update_traces(textposition='outside')
-                    st.plotly_chart(fig, use_container_width=True)
-                    
-                    # Subject details table
-                    st.markdown('<h4 style="color: #1E40AF;">Subject Details</h4>', unsafe_allow_html=True)
-                    
-                    subject_data = []
-                    for _, subject in student_subjects.iterrows():
-                        subject_data.append({
-                            "Subject": subject['Subject'],
-                            "Score": f"{subject['Score']}%",
-                            "Grade": subject['Grade'],
-                            "Status": "On Track" if subject['Score'] >= 80 else "Needs Improvement"
-                        })
-                    
-                    subject_df = pd.DataFrame(subject_data)
-                    st.dataframe(subject_df, use_container_width=True, hide_index=True)
-                    
-                    # Strengths and weaknesses
-                    col1, col2 = st.columns(2)
-                    
-                    with col1:
-                        st.markdown("""
-                        <div style="padding: 15px; background-color: #DBEAFE; border-radius: 8px;">
-                            <h4 style="margin-top: 0; color: #1E40AF;">Strengths</h4>
-                            <ul>
-                        """, unsafe_allow_html=True)
-                        
-                        for strength in selected_student['Strengths'].split(','):
-                            st.markdown(f"<li>{strength.strip()}</li>", unsafe_allow_html=True)
-                        
-                        st.markdown("""
-                            </ul>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    with col2:
-                        st.markdown("""
-                        <div style="padding: 15px; background-color: #FEF2F2; border-radius: 8px;">
-                            <h4 style="margin-top: 0; color: #B91C1C;">Areas for Improvement</h4>
-                            <ul>
-                        """, unsafe_allow_html=True)
-                        
-                        for weakness in selected_student['Weaknesses'].split(','):
-                            st.markdown(f"<li>{weakness.strip()}</li>", unsafe_allow_html=True)
-                        
-                        st.markdown("""
-                            </ul>
-                        </div>
-                        """, unsafe_allow_html=True)
-                
-                with tab2:
-                    # Assignment status chart
-                    assignment_status = student_assignments['Status'].value_counts().reset_index()
-                    assignment_status.columns = ['Status', 'Count']
-                    
-                    fig = px.pie(
-                        assignment_status,
-                        names='Status',
-                        values='Count',
-                        title="Assignment Status",
-                        color='Status',
-                        color_discrete_map={
-                            'Submitted': '#047857',
-                            'Late': '#D97706',
-                            'Missing': '#DC2626'
-                        },
-                        hole=0.4
-                    )
-                    fig.update_layout(height=300)
-                    st.plotly_chart(fig, use_container_width=True)
-                    
-                    # Assignment details table
-                    st.markdown('<h4 style="color: #1E40AF;">Assignment Details</h4>', unsafe_allow_html=True)
-                    
-                    student_assignments_display = student_assignments.copy()
-                    student_assignments_display['Due_Date'] = student_assignments_display['Due_Date'].dt.strftime('%b %d, %Y')
-                    student_assignments_display = student_assignments_display[['Subject', 'Assignment', 'Due_Date', 'Status', 'Score']]
-                    
-                    # Add color to status
-                    def highlight_status(val):
-                        if val == 'Submitted':
-                            return 'background-color: #ECFDF5; color: #047857'
-                        elif val == 'Late':
-                            return 'background-color: #FFFBEB; color: #D97706'
-                        elif val == 'Missing':
-                            return 'background-color: #FEF2F2; color: #DC2626'
-                        return ''
-                    
-                    st.dataframe(student_assignments_display, use_container_width=True, hide_index=True)
-                    
-                    # Assignment actions
-                    col1, col2 = st.columns(2)
-                    
-                    with col1:
-                        st.button("Add New Assignment", key="add_assignment")
-                    
-                    with col2:
-                        st.button("Send Assignment Reminder", key="send_reminder")
-                
-                with tab3:
-                    # Attendance trend chart
-                    attendance_counts = student_attendance['Status'].value_counts()
-                    present_pct = attendance_counts.get('Present', 0) / len(student_attendance) * 100
-                    absent_pct = attendance_counts.get('Absent', 0) / len(student_attendance) * 100
-                    late_pct = attendance_counts.get('Late', 0) / len(student_attendance) * 100
-                    
-                    attendance_data = pd.DataFrame({
-                        'Status': ['Present', 'Absent', 'Late'],
-                        'Percentage': [present_pct, absent_pct, late_pct]
-                    })
-                    
-                    fig = px.bar(
-                        attendance_data,
-                        x='Status',
-                        y='Percentage',
-                        title=f"Attendance Overview for {selected_student['Name']}",
-                        color='Status',
-                        color_discrete_map={
-                            'Present': '#047857',
-                            'Absent': '#DC2626',
-                            'Late': '#D97706'
-                        },
-                        text_auto='.1f'
-                    )
-                    fig.update_layout(
-                        xaxis_title="Status",
-                        yaxis_title="Percentage (%)",
-                        yaxis=dict(range=[0, 100]),
-                        showlegend=False,
-                        height=300
-                    )
-                    fig.update_traces(texttemplate='%{text}%', textposition='outside')
-                    st.plotly_chart(fig, use_container_width=True)
-                    
-                    # Attendance calendar view
-                    st.markdown('<h4 style="color: #1E40AF;">Attendance Log</h4>', unsafe_allow_html=True)
-                    
-                    student_attendance_display = student_attendance.copy()
-                    student_attendance_display['Date'] = student_attendance_display['Date'].dt.strftime('%b %d, %Y')
-                    student_attendance_display = student_attendance_display[['Date', 'Status']]
-                    
-                    # Add color to status
-                    def highlight_attendance(val):
-                        if val == 'Present':
-                            return 'background-color: #ECFDF5; color: #047857'
-                        elif val == 'Absent':
-                            return 'background-color: #FEF2F2; color: #DC2626'
-                        elif val == 'Late':
-                            return 'background-color: #FFFBEB; color: #D97706'
-                        return ''
-                    
-                    st.dataframe(student_attendance_display, use_container_width=True, hide_index=True)
-                    
-                    # Attendance actions
-                    col1, col2 = st.columns(2)
-                    
-                    with col1:
-                        st.button("Record Attendance", key="record_attendance")
-                    
-                    with col2:
-                        st.button("Send Attendance Report", key="send_attendance_report")
+            # Define columns first
+col1, col2 = st.columns(2)
 
-# Gradebook page
-elif selected == "Gradebook":
-    st.markdown('<h1 class="dashboard-title">Gradebook Management</h1>', unsafe_allow_html=True)
+# Content for first column
+with col1:
+    # Create a safer way to get initials
+    name_parts = selected_student['Name'].split()
+    initials = name_parts[0][0]  # Always get first initial
     
+    # Add second initial only if there's a second name part
+    if len(name_parts) > 1:
+        initials += name_parts[1][0]
+    
+    st.markdown(f"""
+    <div class="grade-card">
+        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+            <div style="background-color: #3B82F6; color: white; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 24px; margin-right: 15px;">
+                {initials}
+            </div>
+            <div>
+                <div style="font-weight: 600; color: #1E3A8A; font-size: 1.2rem;">{selected_student['Name']}</div>
+                <div style="color: #6B7280;">ID: {selected_student['ID']}</div>
+            </div>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <div style="font-weight: 500; margin-bottom: 5px;">Overall Grade</div>
+            <div style="display: flex; align-items: center;">
+                <div style="background-color: #DBEAFE; color: #1E40AF; width: 40px; height: 40px;
+                border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                font-weight: bold; font-size: 18px; margin-right: 10px;">
+                    {selected_student['Grade'][0]}
+                </div>
+                <div style="font-size: 1.2rem; font-weight: 600; color: #1E40AF;">{selected_student['Grade']} ({selected_student['Score']}%)</div>
+            </div>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <div style="font-weight: 500; margin-bottom: 5px;">Attendance</div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: {selected_student['Attendance']}%;"></div>
+            </div>
+            <div style="text-align: right; font-size: 0.9rem;">{selected_student['Attendance']}%</div>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <div style="font-weight: 500; margin-bottom: 5px;">Behavior</div>
+            <div style="padding: 8px; background-color: #F3F4F6; border-radius: 8px; text-align: center;">
+                {selected_student['Behavior']}
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown(f"""
+    <div class="grade-card">
+        <h4 style="margin-top: 0;">Teacher Comments</h4>
+        <p style="font-style: italic;">"{selected_student['Comments']}"</p>
+        <div style="font-size: 0.8rem; color: #6B7280; text-align: right;">
+            Last updated: {selected_student['Last Updated'].strftime('%b %d, %Y')}
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Content for second column
+with col2:
+    tab1, tab2, tab3 = st.tabs(["Academic Performance", "Assignments", "Attendance"])
+    
+    with tab1:
+        # Subject performance chart
+        fig = px.bar(
+            student_subjects,
+            x='Subject',
+            y='Score',
+            color='Subject',
+            title=f"Subject Performance for {selected_student['Name']}",
+            text='Grade',
+            height=300
+        )
+        fig.update_layout(
+            xaxis_title="Subject",
+            yaxis_title="Score (%)",
+            yaxis=dict(range=[0, 100]),
+            showlegend=False
+        )
+        fig.update_traces(textposition='outside')
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Subject details table
+        st.markdown('<h4 style="color: #1E40AF;">Subject Details</h4>', unsafe_allow_html=True)
+        
+        subject_data = []
+        for _, subject in student_subjects.iterrows():
+            subject_data.append({
+                "Subject": subject['Subject'],
+                "Score": f"{subject['Score']}%",
+                "Grade": subject['Grade'],
+                "Status": "On Track" if subject['Score'] >= 80 else "Needs Improvement"
+            })
+        
+        subject_df = pd.DataFrame(subject_data)
+        st.dataframe(subject_df, use_container_width=True, hide_index=True)
+        
+        # Strengths and weaknesses
+        strength_col1, strength_col2 = st.columns(2)
+        
+        with strength_col1:
+            st.markdown("""
+            <div style="padding: 15px; background-color: #DBEAFE; border-radius: 8px;">
+                <h4 style="margin-top: 0; color: #1E40AF;">Strengths</h4>
+                <ul>
+            """, unsafe_allow_html=True)
+            
+            for strength in selected_student['Strengths'].split(','):
+                st.markdown(f"<li>{strength.strip()}</li>", unsafe_allow_html=True)
+            
+            st.markdown("""
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with strength_col2:
+            st.markdown("""
+            <div style="padding: 15px; background-color: #FEF2F2; border-radius: 8px;">
+                <h4 style="margin-top: 0; color: #B91C1C;">Areas for Improvement</h4>
+                <ul>
+            """, unsafe_allow_html=True)
+            
+            for weakness in selected_student['Weaknesses'].split(','):
+                st.markdown(f"<li>{weakness.strip()}</li>", unsafe_allow_html=True)
+            
+            st.markdown("""
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    with tab2:
+        # Assignment status chart
+        assignment_status = student_assignments['Status'].value_counts().reset_index()
+        assignment_status.columns = ['Status', 'Count']
+        
+        fig = px.pie(
+            assignment_status,
+            names='Status',
+            values='Count',
+            title="Assignment Status",
+            color='Status',
+            color_discrete_map={
+                'Submitted': '#047857',
+                'Late': '#D97706',
+                'Missing': '#DC2626'
+            },
+            hole=0.4
+        )
+        fig.update_layout(height=300)
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Assignment details table
+        st.markdown('<h4 style="color: #1E40AF;">Assignment Details</h4>', unsafe_allow_html=True)
+        
+        student_assignments_display = student_assignments.copy()
+        student_assignments_display['Due_Date'] = student_assignments_display['Due_Date'].dt.strftime('%b %d, %Y')
+        student_assignments_display = student_assignments_display[['Subject', 'Assignment', 'Due_Date', 'Status', 'Score']]
+        
+        # Add color to status
+        def highlight_status(val):
+            if val == 'Submitted':
+                return 'background-color: #ECFDF5; color: #047857'
+            elif val == 'Late':
+                return 'background-color: #FFFBEB; color: #D97706'
+            elif val == 'Missing':
+                return 'background-color: #FEF2F2; color: #DC2626'
+            return ''
+        
+        st.dataframe(student_assignments_display, use_container_width=True, hide_index=True)
+        
+        # Assignment actions
+        assign_col1, assign_col2 = st.columns(2)
+        
+        with assign_col1:
+            st.button("Add New Assignment", key="add_assignment")
+        
+        with assign_col2:
+            st.button("Send Assignment Reminder", key="send_reminder")
+    
+    with tab3:
+        # Attendance trend chart
+        attendance_counts = student_attendance['Status'].value_counts()
+        present_pct = attendance_counts.get('Present', 0) / len(student_attendance) * 100
+        absent_pct = attendance_counts.get('Absent', 0) / len(student_attendance) * 100
+        late_pct = attendance_counts.get('Late', 0) / len(student_attendance) * 100
+        
+        attendance_data = pd.DataFrame({
+            'Status': ['Present', 'Absent', 'Late'],
+            'Percentage': [present_pct, absent_pct, late_pct]
+        })
+        
+        fig = px.bar(
+            attendance_data,
+            x='Status',
+            y='Percentage',
+            title=f"Attendance Overview for {selected_student['Name']}",
+            color='Status',
+            color_discrete_map={
+                'Present': '#047857',
+                'Absent': '#DC2626',
+                'Late': '#D97706'
+            },
+            text_auto='.1f'
+        )
+        fig.update_layout(
+            xaxis_title="Status",
+            yaxis_title="Percentage (%)",
+            yaxis=dict(range=[0, 100]),
+            showlegend=False,
+            height=300
+        )
+        fig.update_traces(texttemplate='%{text}%', textposition='outside')
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Attendance calendar view
+        st.markdown('<h4 style="color: #1E40AF;">Attendance Log</h4>', unsafe_allow_html=True)
+        
+        student_attendance_display = student_attendance.copy()
+        student_attendance_display['Date'] = student_attendance_display['Date'].dt.strftime('%b %d, %Y')
+        student_attendance_display = student_attendance_display[['Date', 'Status']]
+        
+        # Add color to status
+        def highlight_attendance(val):
+            if val == 'Present':
+                return 'background-color: #ECFDF5; color: #047857'
+            elif val == 'Absent':
+                return 'background-color: #FEF2F2; color: #DC2626'
+            elif val == 'Late':
+                return 'background-color: #FFFBEB; color: #D97706'
+            return ''
+        
+        st.dataframe(student_attendance_display, use_container_width=True, hide_index=True)
+        
+        # Attendance actions
+        attend_col1, attend_col2 = st.columns(2)
+        
+        with attend_col1:
+            st.button("Record Attendance", key="record_attendance")
+        
+        with attend_col2:
+            st.button("Send Attendance Report", key="send_attendance_report")
+# Gradebook page
+ 
+if selected == "Gradebook":
+    st.markdown('<h1 class="dashboard-title">Gradebook Management</h1>', unsafe_allow_html=True)
     tab1, tab2, tab3 = st.tabs(["Class Gradebook", "Enter Grades", "Grade Analytics"])
     
     with tab1:
